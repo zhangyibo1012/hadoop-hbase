@@ -42,9 +42,10 @@ public class HBaseUtil {
 
 //            创建
             HTableDescriptor tableDescriptor = new HTableDescriptor(TableName.valueOf(tableName));
+            System.out.println(tableDescriptor);
             Arrays.asList(cfs).forEach(cf -> {
                 HColumnDescriptor columnDescriptor = new HColumnDescriptor(cf);
-                columnDescriptor.setMaxVersions(1);
+                columnDescriptor.setMaxVersions(10);
                 tableDescriptor.addFamily(columnDescriptor);
             });
 
