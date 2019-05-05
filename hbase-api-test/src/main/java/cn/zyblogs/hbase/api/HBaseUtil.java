@@ -60,6 +60,22 @@ public class HBaseUtil {
     }
 
     /**
+     * 删除hbase表.
+     *
+     * @param tableName 表名
+     * @return 是否删除成功
+     */
+    public static boolean deleteTable(String tableName) {
+        try (HBaseAdmin admin = (HBaseAdmin) HBaseConnection.getHBaseConnection().getAdmin()) {
+            admin.disableTable(tableName);
+            admin.deleteTable(tableName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    /**
      * HBase 插入一条数据
      *
      * @param tableName 表名
@@ -157,8 +173,8 @@ public class HBaseUtil {
      * 批量检索数据. 区间扫描
      *
      * @param tableName     表名
-     * @param startRowKey   起始RowKey
-     * @param endRowKey     终止RowKey
+     * @param startRowKey   起始RowKey  包含头
+     * @param endRowKey     终止RowKey  不包含尾
      * @return              ResultScanner实例
      */
     public static ResultScanner getScanner(String tableName, String startRowKey, String endRowKey) {
