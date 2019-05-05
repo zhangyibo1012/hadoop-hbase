@@ -1,0 +1,27 @@
+导致 HBase 性能下降:
+    1.JVM 内存分配与 GC 回收策略
+    2.与 HBase 运行机制相关的部分设置不合理
+    3.表结构设计及用户使用方式不合理
+
+HBase 数据存储过程:
+    HBase 写入时,当 MemStore 达到一定的大小会 flush 到磁盘保存成 HFile,当HFile小文件太多会执行
+    compact 操作进行合并
+
+    当 Region 的大小达到某一阈值之后,会执行 split 操作.
+
+    minor compaction:选取一些小的 相邻的 StoreFile 将它们合并成一个更大的 StoreFile.
+
+    major compaction: 将所有的 StoreFile 合并成一个 StoreFile ,清理无意义的数据,被删除的数据,TTL
+    过期数据,版本号超过设定版本号的数据.
+
+触发 HBase Compact 检查
+    当 MemStore 被 flush 到磁盘.
+    用户执行 shell 命令调用 api
+    HBase 后台线程周期性触发检查.
+
+=========================================================================================
+HBase 服务端优化
+    jvm 设置与 GC 设置.
+    hbase-site.xml 部分属性优化
+
+

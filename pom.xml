@@ -10,6 +10,10 @@
     <version>1.0.0</version>
     <modules>
         <module>hbase-api-test</module>
+        <module>hbase-observer-test</module>
+        <module>hbase-monitor</module>
+        <module>phoenix-test</module>
+        <module>phoenix-mybatis</module>
     </modules>
 
 
