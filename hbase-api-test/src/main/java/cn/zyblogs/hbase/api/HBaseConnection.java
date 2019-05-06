@@ -21,20 +21,53 @@ public class HBaseConnection {
 
     private static Connection connection;
 
-    private HBaseConnection(){
+    private HBaseConnection() {
         try {
-            if (configuration == null){
+            if (configuration == null) {
                 configuration = HBaseConfiguration.create();
                 configuration.set("hbase.zookeeper.property.clientPort", "2181");
                 configuration.set("hbase.zookeeper.quorum", "hix-virtual-machine");
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private Connection getConnection(){
-        if (connection == null || connection.isClosed()){
+    /**
+     * 获取 HBase 链接
+     *
+     * @return Connection
+     */
+    public static Connection getHBaseConnection() {
+        return INSTANCE.getConnection();
+    }
+
+    /**
+     * 获取 Table 实例
+     *
+     * @param tableName tableName
+     * @return Table
+     * @throws IOException IOException
+     */
+    public static Table getTable(String tableName) throws IOException {
+        return INSTANCE.getConnection().getTable(TableName.valueOf(tableName));
+    }
+
+    /**
+     * 关闭 HBase 链接
+     */
+    public static void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private Connection getConnection() {
+        if (connection == null || connection.isClosed()) {
             try {
                 connection = ConnectionFactory.createConnection(configuration);
             } catch (IOException e) {
@@ -42,38 +75,5 @@ public class HBaseConnection {
             }
         }
         return connection;
-    }
-
-    /**
-     *  获取 HBase 链接
-     *
-     * @return  Connection
-     */
-    public static Connection getHBaseConnection(){
-        return INSTANCE.getConnection();
-    }
-
-    /**
-     *  获取 Table 实例
-     *
-     * @param tableName  tableName
-     * @return           Table
-     * @throws IOException  IOException
-     */
-    public static Table getTable(String tableName)throws IOException{
-        return INSTANCE.getConnection().getTable(TableName.valueOf(tableName));
-    }
-
-    /**
-     *  关闭 HBase 链接
-     */
-    public static void closeConnection(){
-        if (connection != null){
-            try {
-                connection.close();
-            }catch (Exception ex){
-                ex.printStackTrace();
-            }
-        }
     }
 }

@@ -11,10 +11,10 @@ import org.junit.Test;
 public class HbaseConnectionTest {
 
     /**
-     *  测试链接
+     * 测试链接
      */
     @Test
-    public void getConnectionTest(){
+    public void getConnectionTest() {
         Connection hBaseConnection = HBaseConnection.getHBaseConnection();
         System.out.println("hBaseConnection = " + hBaseConnection);
         HBaseConnection.closeConnection();
@@ -22,15 +22,15 @@ public class HbaseConnectionTest {
     }
 
     /**
-     *  测试获取 Table 实例
+     * 测试获取 Table 实例
      */
     @Test
-    public void getTableTest(){
+    public void getTableTest() {
         try {
             Table table = HBaseConnection.getTable("US_POPULATION");
             System.out.println("table = " + table.getName().getNameAsString());
             table.close();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

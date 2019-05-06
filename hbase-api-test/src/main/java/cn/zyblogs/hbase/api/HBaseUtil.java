@@ -31,7 +31,7 @@ public class HBaseUtil {
 //        指那些必须在程序结束时必须关闭的资源(比如数据库网络资源类等)运行结束时会自动关闭
 //        资源实现类必须实现Closeable或AutoCloseable接口，实现这些类就必须实现close方法。
         HBaseAdmin admin = (HBaseAdmin) HBaseConnection.getHBaseConnection().getAdmin();
-        try  {
+        try {
             System.out.println("admin = " + admin);
 //            如果存在 返回 false
             boolean tableExists = admin.tableExists(tableName);
@@ -53,7 +53,7 @@ public class HBaseUtil {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-        }finally {
+        } finally {
             admin.close();
         }
         return true;
@@ -83,7 +83,7 @@ public class HBaseUtil {
      * @param cfName    列族名
      * @param qualifier 列标识
      * @param data      数据
-     * @return          是否插入成功
+     * @return 是否插入成功
      */
     public static boolean putRow(String tableName, String rowKey, String cfName, String qualifier,
                                  String data) {
@@ -103,7 +103,7 @@ public class HBaseUtil {
      *
      * @param tableName 表名
      * @param puts      List<Put> puts HBase 插入数据需要 Put 数据模型
-     * @return          是否插入成功
+     * @return 是否插入成功
      */
     public static boolean putRows(String tableName, List<Put> puts) {
         try (Table table = HBaseConnection.getTable(tableName)) {
@@ -117,8 +117,8 @@ public class HBaseUtil {
     /**
      * 获取单条数据.
      *
-     * @param tableName   表名
-     * @param rowKey      唯一标识
+     * @param tableName 表名
+     * @param rowKey    唯一标识
      * @return 查询结果
      */
     public static Result getRow(String tableName, String rowKey) {
@@ -134,10 +134,10 @@ public class HBaseUtil {
     /**
      * 使用过滤器条件获取数据
      *
-     * @param tableName     表名
-     * @param rowKey        唯一标识
-     * @param filterList    FilterList
-     * @return              查询结果
+     * @param tableName  表名
+     * @param rowKey     唯一标识
+     * @param filterList FilterList
+     * @return 查询结果
      */
     public static Result getRow(String tableName, String rowKey, FilterList filterList) {
         try (Table table = HBaseConnection.getTable(tableName)) {
@@ -152,10 +152,10 @@ public class HBaseUtil {
     }
 
     /**
-     *  Scan 检索数据 全表扫描
+     * Scan 检索数据 全表扫描
      *
-     * @param tableName  表名
-     * @return           ResultScanner
+     * @param tableName 表名
+     * @return ResultScanner
      */
     public static ResultScanner getScanner(String tableName) {
         try (Table table = HBaseConnection.getTable(tableName)) {
@@ -172,10 +172,10 @@ public class HBaseUtil {
     /**
      * 批量检索数据. 区间扫描
      *
-     * @param tableName     表名
-     * @param startRowKey   起始RowKey  包含头
-     * @param endRowKey     终止RowKey  不包含尾
-     * @return              ResultScanner实例
+     * @param tableName   表名
+     * @param startRowKey 起始RowKey  包含头
+     * @param endRowKey   终止RowKey  不包含尾
+     * @return ResultScanner实例
      */
     public static ResultScanner getScanner(String tableName, String startRowKey, String endRowKey) {
         try (Table table = HBaseConnection.getTable(tableName)) {
@@ -193,11 +193,11 @@ public class HBaseUtil {
     /**
      * 批量过滤检索数据. 区间扫描.
      *
-     * @param tableName     表名
-     * @param startRowKey   起始RowKey
-     * @param endRowKey     终止RowKey
-     * @param filterList    FilterList
-     * @return              ResultScanner实例
+     * @param tableName   表名
+     * @param startRowKey 起始RowKey
+     * @param endRowKey   终止RowKey
+     * @param filterList  FilterList
+     * @return ResultScanner实例
      */
     public static ResultScanner getScanner(String tableName, String startRowKey, String endRowKey,
                                            FilterList filterList) {
@@ -217,9 +217,9 @@ public class HBaseUtil {
     /**
      * HBase删除一行记录.
      *
-     * @param tableName     表名
-     * @param rowKey        唯一标识
-     * @return              是否删除成功
+     * @param tableName 表名
+     * @param rowKey    唯一标识
+     * @return 是否删除成功
      */
     public static boolean deleteRow(String tableName, String rowKey) {
         try (Table table = HBaseConnection.getTable(tableName)) {
@@ -234,9 +234,9 @@ public class HBaseUtil {
     /**
      * 删除某一个列族  对表结构进行更改
      *
-     * @param tableName   表名
-     * @param cfName      列族
-     * @return            是否删除成功
+     * @param tableName 表名
+     * @param cfName    列族
+     * @return 是否删除成功
      */
     public static boolean deleteColumnFamily(String tableName, String cfName) {
         try (HBaseAdmin admin = (HBaseAdmin) HBaseConnection.getHBaseConnection().getAdmin()) {
@@ -250,11 +250,11 @@ public class HBaseUtil {
     /**
      * 删除 Qualifier
      *
-     * @param tableName     表名
-     * @param rowKey        唯一标识
-     * @param cfName        列族
-     * @param qualifier     属性
-     * @return              是否删除成功
+     * @param tableName 表名
+     * @param rowKey    唯一标识
+     * @param cfName    列族
+     * @param qualifier 属性
+     * @return 是否删除成功
      */
     public static boolean deleteQualifier(String tableName, String rowKey, String cfName,
                                           String qualifier) {

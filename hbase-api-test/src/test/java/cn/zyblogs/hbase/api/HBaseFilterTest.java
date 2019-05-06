@@ -22,7 +22,7 @@ public class HBaseFilterTest {
     }
 
     @Test
-    public void addFileDetails(){
+    public void addFileDetails() {
 
 //        brocastInfo 列族
         HBaseUtil.putRow("hixTable", "rowKey3", "brocastInfo", "name", "file3.txt");
@@ -43,7 +43,7 @@ public class HBaseFilterTest {
     }
 
     @Test
-    public void rowFilterTest(){
+    public void rowFilterTest() {
         /**
          *  比较运算符  rowKey1 的数据
          */
@@ -61,7 +61,7 @@ public class HBaseFilterTest {
          *   而Arrays.asList(something)的容量将为已支持数组的大小。
          *
          */
-        FilterList filterList = new FilterList(FilterList.Operator.MUST_PASS_ALL , Collections.singletonList(filter));
+        FilterList filterList = new FilterList(FilterList.Operator.MUST_PASS_ALL, Collections.singletonList(filter));
 
         ResultScanner scanner = HBaseUtil.getScanner("hixTable", "rowKey1", "rowKey3", filterList);
 
@@ -79,10 +79,10 @@ public class HBaseFilterTest {
     }
 
     @Test
-    public void prefixFilterTest(){
+    public void prefixFilterTest() {
 
         Filter filter = new PrefixFilter(Bytes.toBytes("rowKey2"));
-        FilterList filterList = new FilterList(FilterList.Operator.MUST_PASS_ALL , Collections.singletonList(filter));
+        FilterList filterList = new FilterList(FilterList.Operator.MUST_PASS_ALL, Collections.singletonList(filter));
 
         ResultScanner scanner = HBaseUtil.getScanner("hixTable", "rowKey1", "rowKey3", filterList);
         assert scanner != null;
@@ -106,13 +106,13 @@ public class HBaseFilterTest {
         ResultScanner scanner = HBaseUtil
                 .getScanner("hixTable", "rowKey1", "rowKey3", filterList);
 
-             assert scanner != null;
-             scanner.forEach(result -> {
-                System.out.println("rowKey=" + Bytes.toString(result.getRow()));
-                System.out.println("fileName=" + Bytes
-                        .toString(result.getValue(Bytes.toBytes("brocastInfo"), Bytes.toBytes("name"))));
-            });
-            scanner.close();
+        assert scanner != null;
+        scanner.forEach(result -> {
+            System.out.println("rowKey=" + Bytes.toString(result.getRow()));
+            System.out.println("fileName=" + Bytes
+                    .toString(result.getValue(Bytes.toBytes("brocastInfo"), Bytes.toBytes("name"))));
+        });
+        scanner.close();
     }
 
     @Test

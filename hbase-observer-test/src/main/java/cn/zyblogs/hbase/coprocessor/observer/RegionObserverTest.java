@@ -27,10 +27,10 @@ public class RegionObserverTest extends BaseRegionObserver {
     private RegionCoprocessorEnvironment environment;
 
     /**
-     *  RegionServer 打开 Region 前执行
+     * RegionServer 打开 Region 前执行
      *
-     * @param e     CoprocessorEnvironment
-     * @throws IOException  IOException
+     * @param e CoprocessorEnvironment
+     * @throws IOException IOException
      */
     @Override
     public void start(CoprocessorEnvironment e) throws IOException {
@@ -40,8 +40,8 @@ public class RegionObserverTest extends BaseRegionObserver {
     /**
      * RegionServer 打开 Region 前执行
      *
-     * @param e     CoprocessorEnvironment
-     * @throws IOException  IOException
+     * @param e CoprocessorEnvironment
+     * @throws IOException IOException
      */
     @Override
     public void stop(CoprocessorEnvironment e) throws IOException {
@@ -49,11 +49,11 @@ public class RegionObserverTest extends BaseRegionObserver {
     }
 
     /**
-     *  1. cf :countCol 进行累加操作 每次插入的时候都要与之前的值进行相加
+     * 1. cf :countCol 进行累加操作 每次插入的时候都要与之前的值进行相加
      */
     @Override
     public void prePut(ObserverContext<RegionCoprocessorEnvironment> e, Put put, WALEdit edit, Durability durability) throws IOException {
-        if (put.has(columnFamily, countCol)){
+        if (put.has(columnFamily, countCol)) {
 //            获取 old  countCol 累加
             Result result = e.getEnvironment().getRegion().get(new Get(put.getRow()));
             Cell[] rawCells = result.rawCells();
@@ -80,7 +80,7 @@ public class RegionObserverTest extends BaseRegionObserver {
     }
 
     /**
-     *   不能直接删除unDeleteCol    删除countCol的时候将unDeleteCol一同删除
+     * 不能直接删除unDeleteCol    删除countCol的时候将unDeleteCol一同删除
      */
     @Override
     public void preDelete(ObserverContext<RegionCoprocessorEnvironment> e, Delete delete, WALEdit edit, Durability durability) throws IOException {
@@ -90,15 +90,15 @@ public class RegionObserverTest extends BaseRegionObserver {
             boolean deleteFlag = false;
             for (Cell cell : cells) {
                 byte[] qualifier = CellUtil.cloneQualifier(cell);
-                if (Arrays.equals(qualifier, unDeleteCol)){
+                if (Arrays.equals(qualifier, unDeleteCol)) {
                     throw new IOException("can not delete unDel column");
                 }
 
-                if (Arrays.equals(qualifier, countCol)){
+                if (Arrays.equals(qualifier, countCol)) {
                     deleteFlag = true;
                 }
             }
-            if (deleteFlag){
+            if (deleteFlag) {
                 delete.addColumn(columnFamily, unDeleteCol);
             }
         }

@@ -20,7 +20,7 @@ public class HBaseUtilTest {
     }
 
     @Test
-    public void addFileDetails(){
+    public void addFileDetails() {
 
 //        brocastInfo 列族
         HBaseUtil.putRow("hixTable", "rowKey1", "brocastInfo", "name", "file1.txt");
@@ -41,21 +41,21 @@ public class HBaseUtilTest {
     }
 
     @Test
-    public void getFileDetails(){
+    public void getFileDetails() {
 //        查询 rowKey1 的值
         Result result = HBaseUtil.getRow("hixTable", "rowKey1");
 
 //            获取主键 rowKey1
-            System.out.println("rowKey = " + Bytes.toString(result.getRow()));
+        System.out.println("rowKey = " + Bytes.toString(result.getRow()));
 
 //            传入 列族 和 列标识 名称
-            System.out.println("fileName = " + Bytes.toString(
+        System.out.println("fileName = " + Bytes.toString(
                 result.getValue(Bytes.toBytes("brocastInfo"), Bytes.toBytes("name"))
-            ));
+        ));
     }
 
     @Test
-    public void scanFileDetails(){
+    public void scanFileDetails() {
         ResultScanner scanner = HBaseUtil.getScanner("hixTable", "rowKey1", "rowKey2");
         if (scanner != null) {
             scanner.forEach(result -> {
@@ -72,14 +72,14 @@ public class HBaseUtilTest {
     }
 
     @Test
-    public void deleteRow(){
+    public void deleteRow() {
 //        删除 rowKey1 一行 数据
         HBaseUtil.deleteRow("hixTable", "rowKey1");
         System.out.println("true = " + true);
     }
 
     @Test
-    public void deleteTable(){
+    public void deleteTable() {
         boolean hixTable = HBaseUtil.deleteTable("hixTable");
         System.out.println("hixTable = " + hixTable);
     }
