@@ -2,6 +2,8 @@ package cn.zyblogs.hbase.api;
 
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
+import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.filter.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.Test;
 
@@ -15,28 +17,34 @@ public class HBaseUtilTest {
 
     @Test
     public void createTable() throws IOException {
-        HBaseUtil.createTable("hixTable", new String[]{"brocastInfo", "saveInfo"});
+        HBaseUtil.createTable("system3RecommendTable", new String[]{"broadcastInfo"});
         System.out.println("HBaseUtilTest.createTable ok ");
     }
 
     @Test
     public void addFileDetails() {
 
-//        brocastInfo 列族
-        HBaseUtil.putRow("hixTable", "rowKey1", "brocastInfo", "name", "file1.txt");
-        HBaseUtil.putRow("hixTable", "rowKey1", "brocastInfo", "type", "txt");
-        HBaseUtil.putRow("hixTable", "rowKey1", "brocastInfo", "size", "1024");
+//        broadcastInfo 列族
+        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "broadcastId", "1");
+        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "broadcastWeight", "70");
+        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "handlerUserId", "60001");
+        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "handlerUserId", "60001");
+        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
+        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
+        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
+        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
+        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
 
-//        saveInfo 列族
-        HBaseUtil.putRow("hixTable", "rowKey1", "saveInfo", "creator", "zhangyibo");
-
-//        brocastInfo 列族
-        HBaseUtil.putRow("hixTable", "rowKey2", "brocastInfo", "name", "file2.jpg");
-        HBaseUtil.putRow("hixTable", "rowKey2", "brocastInfo", "type", "jpg");
-        HBaseUtil.putRow("hixTable", "rowKey2", "brocastInfo", "size", "1024");
-
-//        saveInfo 列族
-        HBaseUtil.putRow("hixTable", "rowKey2", "saveInfo", "creator", "zhangyibo");
+////        saveInfo 列族
+//        HBaseUtil.putRow("hixTable", "rowKey1", "saveInfo", "creator", "zhangyibo");
+//
+////        brocastInfo 列族
+//        HBaseUtil.putRow("hixTable", "rowKey2", "brocastInfo", "name", "file2.jpg");
+//        HBaseUtil.putRow("hixTable", "rowKey2", "brocastInfo", "type", "jpg");
+//        HBaseUtil.putRow("hixTable", "rowKey2", "brocastInfo", "size", "1024");
+//
+////        saveInfo 列族
+//        HBaseUtil.putRow("hixTable", "rowKey2", "saveInfo", "creator", "zhangyibo");
         System.out.println("true = " + true);
     }
 
@@ -83,4 +91,5 @@ public class HBaseUtilTest {
         boolean hixTable = HBaseUtil.deleteTable("hixTable");
         System.out.println("hixTable = " + hixTable);
     }
+
 }
