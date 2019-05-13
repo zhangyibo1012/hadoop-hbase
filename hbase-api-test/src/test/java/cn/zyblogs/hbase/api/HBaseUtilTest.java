@@ -91,5 +91,4 @@ public class HBaseUtilTest {
         boolean hixTable = HBaseUtil.deleteTable("hixTable");
         System.out.println("hixTable = " + hixTable);
     }
-
 }

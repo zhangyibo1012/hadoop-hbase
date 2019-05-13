@@ -1,4 +1,4 @@
-# HBase shell中的帮助命令非常强大，使用help获得全部命令的列表，使用help ‘command_name’获得某一个命令的详细信息
+﻿# HBase shell中的帮助命令非常强大，使用help获得全部命令的列表，使用help ‘command_name’获得某一个命令的详细信息
 help 'status'
 # 查询服务器状态
 status
@@ -7,7 +7,8 @@ list
 # 创建一个表   fileInfo 列族
 create 'FileTable','fileInfo','saveInfo'
 # 获得表的描述
-describe 'FileTable'
+
+describe 'hix_bro_recommend'
 # 添加一个列族
 alter 'FileTable', 'cf'
 # 删除一个列族
@@ -30,10 +31,11 @@ get 'FileTable', 'rowkey1'
 # 获得一个id，一个列簇（一个列）中的所有数据
 get 'FileTable', 'rowkey1', 'fileInfo'
 # 查询整表数据
-scan 'FileTable'
+scan 'hix_bro_recommend'
 # 扫描整个列簇
 scan 'FileTable', {COLUMN=>'fileInfo'}
 # 指定扫描其中的某个列
+scan 'hix_bro_recommend' ,{COLUMNS=>'dd:time'}
 scan 'FileTable', {COLUMNS=> 'fileInfo:name'}
 # 除了列（COLUMNS）修饰词外，HBase还支持Limit（限制查询结果行数），STARTROW（ROWKEY起始行。会先根据这个key定位到region，再向后扫描）、STOPROW(结束行)、TIMERANGE（限定时间戳范围）、VERSIONS（版本数）、和FILTER（按条件过滤行）等。比如我们从RowKey1这个rowkey开始，找下一个行的最新版本
 scan 'FileTable', { STARTROW => 'rowkey1', LIMIT=>1, VERSIONS=>1}
@@ -55,3 +57,4 @@ exists 'FileTable'
 # 删除表需要先将表disable
 disable 'FileTable'
 drop 'FileTable'
+drop 'hix_bro_recommend'
