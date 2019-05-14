@@ -14,8 +14,16 @@
         <module>hbase-monitor</module>
         <module>phoenix-test</module>
         <module>phoenix-mybatis</module>
+        <module>test</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+    </dependencies>
 
 
 

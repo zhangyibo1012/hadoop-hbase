@@ -16,8 +16,13 @@ import java.io.IOException;
 public class HBaseUtilTest {
 
     @Test
+    public void createNamaspace() throws IOException {
+        HBaseUtil.createNamespace("test");
+    }
+
+    @Test
     public void createTable() throws IOException {
-        HBaseUtil.createTable("system3RecommendTable", new String[]{"broadcastInfo"});
+        HBaseUtil.createTable("test:system3RecommendTable", new String[]{"broadcastInfo"});
         System.out.println("HBaseUtilTest.createTable ok ");
     }
 
@@ -25,15 +30,15 @@ public class HBaseUtilTest {
     public void addFileDetails() {
 
 //        broadcastInfo 列族
-        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "broadcastId", "1");
-        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "broadcastWeight", "70");
-        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "handlerUserId", "60001");
-        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "handlerUserId", "60001");
-        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
-        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
-        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
-        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
-        HBaseUtil.putRow("systemRecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
+        HBaseUtil.putRow("system3RecommendTable", "rowKey1", "broadcastInfo", "broadcastId", "1");
+        HBaseUtil.putRow("system3RecommendTable", "rowKey1", "broadcastInfo", "broadcastWeight", "70");
+        HBaseUtil.putRow("system3RecommendTable", "rowKey1", "broadcastInfo", "handlerUserId", "60001");
+        HBaseUtil.putRow("system3RecommendTable", "rowKey1", "broadcastInfo", "handlerUserId", "60001");
+        HBaseUtil.putRow("system3RecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
+        HBaseUtil.putRow("system3RecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
+        HBaseUtil.putRow("system3RecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
+        HBaseUtil.putRow("system3RecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
+        HBaseUtil.putRow("system3RecommendTable", "rowKey1", "broadcastInfo", "intimacy", "");
 
 ////        saveInfo 列族
 //        HBaseUtil.putRow("hixTable", "rowKey1", "saveInfo", "creator", "zhangyibo");

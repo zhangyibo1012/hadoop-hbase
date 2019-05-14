@@ -2,6 +2,7 @@ package cn.zyblogs.hbase.api;
 
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.NamespaceDescriptor;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.filter.FilterList;
@@ -16,6 +17,21 @@ import java.util.List;
  * @date 2019/04/30
  */
 public class HBaseUtil {
+
+    public static void createNamespace(String namespace) throws IOException {
+
+        Admin admin =HBaseConnection.getHBaseConnection().getAdmin();
+
+//        创建 ns 描述器
+        NamespaceDescriptor namespaceDescriptor = NamespaceDescriptor.create(namespace).build();
+
+//        创建操作
+        admin.createNamespace(namespaceDescriptor);
+
+//        关闭资源
+        admin.close();
+        HBaseConnection.closeConnection();
+    }
 
     /**
      * 创建 HBase 表
@@ -49,6 +65,7 @@ public class HBaseUtil {
                 tableDescriptor.addFamily(columnDescriptor);
             });
 
+//            创建表 预先分区  二维 byte 数组 分区键是多个 应用数组 HBase 底层存储 byte 数组
             admin.createTable(tableDescriptor);
 
         } catch (Exception ex) {

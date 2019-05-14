@@ -26,7 +26,7 @@ public class HBaseConnection {
             if (configuration == null) {
                 configuration = HBaseConfiguration.create();
                 configuration.set("hbase.zookeeper.property.clientPort", "2181");
-                configuration.set("hbase.zookeeper.quorum", "hix-virtual-machine");
+                configuration.set("hbase.zookeeper.quorum", "hix2-virtual-machine");
             }
         } catch (Exception ex) {
             ex.printStackTrace();

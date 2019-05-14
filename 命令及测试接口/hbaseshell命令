@@ -54,4 +54,14 @@ is_disabled 'FileTable'
 exists 'FileTable'
 # 删除表需要先将表disable
 disable 'hix_bro_recommend'
+disable 'hixTest'
+drop 'hixTest'
 drop 'hix_bro_recommend'
+
+describe 'system3RecommendTable'
+
+
+@PathVariable 和 @RequestParam 里面必须加 value限定
+不管参数是否相同，必须制定
+指定
+
