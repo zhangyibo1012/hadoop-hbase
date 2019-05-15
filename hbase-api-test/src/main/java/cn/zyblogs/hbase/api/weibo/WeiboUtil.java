@@ -1,8 +1,13 @@
 package cn.zyblogs.hbase.api.weibo;
 
 import cn.zyblogs.hbase.api.HBaseConnection;
+import cn.zyblogs.hbase.api.HBaseUtil;
 import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.filter.CompareFilter;
+import org.apache.hadoop.hbase.filter.Filter;
+import org.apache.hadoop.hbase.filter.RowFilter;
+import org.apache.hadoop.hbase.filter.SubstringComparator;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
@@ -162,23 +167,131 @@ public class WeiboUtil {
             Scan scan = new Scan(Bytes.toBytes(s),Bytes.toBytes(s + "|"));
             ResultScanner results = contentTable.getScanner(scan);
             for (Result result : results){
-                byte[] rowKey = result.getRow();
-                inboxPut.addColumn(Bytes.toBytes("info"), Bytes.toBytes(s), rowKey);
+                String rowKey = Bytes.toString( result.getRow());
+                String[] split = rowKey.split("_");
+                byte[] row = result.getRow();
+//                使用发布微博的时间戳
+                inboxPut.addColumn(Bytes.toBytes("info"), Bytes.toBytes(s), Long.parseLong(split[1]) , row);
             }
         }
         inboxTable.put(inboxPut);
+
+        inboxTable.close();
+        relationsTable.close();
+        contentTable.close();
+        HBaseConnection.closeConnection();
     }
 
     /**
      *  取关用户
+     *  操作用户关系表 删除操作者关注列族的待取关用户
+     *  删除待取关用户粉丝列族下的操作者
+     *
+     *  收件箱
+     *      删除操作者的待取关用户的信息
      */
+    public static void delAttend(String uid ,String... uids) throws IOException {
+
+//        获取表对象
+        Table relationsTable =HBaseConnection.getTable(Constant.RELATIONS);
+        Table inboxTable = HBaseConnection.getTable(Constant.INBOX);
+
+        Delete relaDel = new Delete(Bytes.toBytes(uid));
+
+//        批量操作
+        List<Delete> deletes = new ArrayList<>();
+
+        for (String s : uids){
+            Delete fansDel = new Delete(Bytes.toBytes(s));
+            fansDel.addColumn(Bytes.toBytes("fans"), Bytes.toBytes(uid));
+            relaDel.addColumn(Bytes.toBytes("attends"), Bytes.toBytes(s));
+            deletes.add(fansDel);
+        }
+        deletes.add(relaDel);
+
+        relationsTable.delete(deletes);
+
+//        删除收件箱
+        Delete inboxDel = new Delete(Bytes.toBytes(uid));
+        for (String s : uids){
+            inboxDel.addColumn(Bytes.toBytes("info"), Bytes.toBytes(s));
+        }
+
+//        执行收件箱表的删除操作
+        inboxTable.delete(inboxDel);
+
+        inboxTable.close();
+        relationsTable.close();
+        HBaseConnection.closeConnection();
+    }
 
     /**
      *  获取微博内容 (初始化页面)
+     *  当前用户 id
      */
+    public static void getInit(String uid) throws IOException {
+//        获取表对象
+        Table contentTable = HBaseConnection.getTable(Constant.CONTENT);
+        Table inboxTable = HBaseConnection.getTable(Constant.INBOX);
+
+//        获取收件箱的数据
+        Get get = new Get(Bytes.toBytes(uid));
+
+//        设置 2  每次获取的是最新的 2 条数据
+        get.setMaxVersions(2);
+
+//        获取数据
+        Result result = inboxTable.get(get);
+
+        Cell[] cells = result.rawCells();
+
+        List<Get> gets = new ArrayList<>();
+
+//        遍历返回内容 并封装成内容表的 get 对象
+        for (Cell cell : cells) {
+            Get contGet = new Get(CellUtil.cloneValue(cell));
+            gets.add(contGet);
+        }
+
+//        根据收件箱获取的值去往内容表获取微博内容
+        Result[] results = contentTable.get(gets);
+        for (Result result1 : results) {
+            Cell[] cells1 = result1.rawCells();
+
+            for (Cell cell : cells1){
+                System.out.println("pk = " + Bytes.toString(CellUtil.cloneRow(cell))
+                        + ",Content: " + Bytes.toString(CellUtil.cloneValue(cell)));
+            }
+        }
+        contentTable.close();
+        inboxTable.close();
+        HBaseConnection.closeConnection();
+    }
+
 
     /**
      *  获取微博内容 (查看某个人的所有微博)
      */
+    public static void getData(String uid) throws IOException {
+        Table contentTable = HBaseConnection.getTable(Constant.CONTENT);
+        Scan scan = new Scan();
+
+//        通过过滤器
+        RowFilter rowFilter = new RowFilter(CompareFilter.CompareOp.EQUAL, new SubstringComparator(uid + "_"));
+
+        scan.setFilter(rowFilter);
+
+        ResultScanner scanner = contentTable.getScanner(scan);
+
+        for (Result result : scanner){
+            Cell[] cells = result.rawCells();
+            for (Cell cell : cells){
+                System.out.println("pk = " + Bytes.toString(CellUtil.cloneRow(cell))
+                        + ",Content: " + Bytes.toString(CellUtil.cloneValue(cell)));
+            }
+        }
+        contentTable.close();
+        HBaseConnection.closeConnection();
+    }
 }
 
