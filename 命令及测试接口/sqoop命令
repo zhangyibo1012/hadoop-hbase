@@ -1,18 +1,72 @@
-# sqoop 帮助
+﻿sqoop：用于数据迁移。
+tar zxf 解压
+添加sqoop-env.sh  配置文件 赋予权限。
 ./sqoop help
 # sqoop import命令帮助
 ./sqoop import --help
-# sqoop 列出database；
+
+# sqoop 列出数据库表database；
 ./sqoop list-databases --connect jdbc:mysql://127.0.0.1/ --username root -P
+ ./sqoop list-databases --connect jdbc:mysql://101.132.175.168/ --username root -P
+
+下载mysql驱动，放在lib目录下
 # sqoop 测试链接查询数据
-./sqoop eval --connect jdbc:mysql://127.0.0.1/dianping --username root --password 123456 --query "select SHOP_NAME,STAR from SHOP limit 10"
+./sqoop eval --connect jdbc:mysql://101.132.175.168:3306/test --username root --P  --query "select * from test_sqoop"
+
+
 # sqoop导入数据到hdfs
-./sqoop import --connect jdbc:mysql://127.0.0.1/dianping --username root -P  --table SHOP --target-dir /dianping.shop --num-mappers 1
+./sqoop import --connect jdbc:mysql://101.132.175.168:3306/test --username root -P  --table test_sqoop --target-dir /sqoop_test --num-mappers 1
 
 # sqoop导出hdfs数据到数据库
 ./sqoop export --connect jdbc:mysql://127.0.0.1:3306/dbTest --username root -P --table testTable --export-dir /dianping.shop --num-mappers 1
 
 # Sqoop导入数据到hbase
-./sqoop import --connect jdbc:mysql://127.0.0.1/dianping --username root -P  --query "select URL_CODE,SHOP_NAME,STAR,CREATE_TIME from SHOP WHERE 1=1 and \$CONDITIONS" --hbase-table dianping --hbase-create-table --hbase-row-key URL_CODE --split-by CREATE_TIME --column-family cf
+./sqoop import --connect jdbc:mysql://101.132.175.168:3306/test --username root -P  --table test_sqoop --hbase-table test_sqoop --hbase-create-table --hbase-row-key broadcast_id --split-by user_id --column-family cf
 
 # sqoop导出hbase数据到数据库
+
+-- -- 查询需要的数据
+-- SELECT
+-- 	unix_timestamp(broadcast.gmt_create) AS time,
+-- 	broadcast_behavior.broadcast_user_id,
+-- 	broadcast_behavior.`comment`,
+-- 	broadcast_behavior.favor,
+-- 	broadcast_behavior.reward,
+-- 	broadcast_behavior.user_id,
+-- 	broadcast_behavior.broadcast_id
+-- FROM
+-- 	broadcast_behavior
+-- LEFT JOIN broadcast ON broadcast.id = broadcast_behavior.broadcast_id
+
+
+INSERT INTO test_sqoop (
+	broadcast_id,
+	broadcast_user_id) SELECT
+	broadcast_id,
+	broadcast_user_id
+	FROM
+	broadcast_behavior;
+
+
+// ok
+ -- 对广播有操作行为的数据
+INSERT INTO test_sqoop (
+	broadcast_id,
+	broadcast_user_id,
+	user_id,
+	favor,
+	COMMENT,
+	reward,
+	time
+) SELECT
+	broadcast_behavior.broadcast_id,
+	broadcast_behavior.broadcast_user_id,
+	broadcast_behavior.user_id,
+	broadcast_behavior.favor,
+	broadcast_behavior. COMMENT,
+	broadcast_behavior.reward,
+	unix_timestamp(broadcast.gmt_create)
+FROM
+	broadcast_behavior
+LEFT JOIN broadcast ON broadcast.id = broadcast_behavior.broadcast_id
+
