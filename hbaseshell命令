@@ -25,9 +25,9 @@ put 'FileTable', 'rowkey2','fileInfo:size','2048'
 put 'FileTable', 'rowkey2','saveInfo:path','/home/pic'
 put 'FileTable', 'rowkey2','saveInfo:creator','jerry'
 # 查询表中有多少行
-count 'FileTable'
+count 'hix_broadcast_recommend'
 # 获取一个rowkey的所有数据
-get 'FileTable', 'rowkey1'
+get 'hix_broadcast_recommend', '43204_128112:17911'
 # 获得一个id，一个列簇（一个列）中的所有数据
 get 'FileTable', 'rowkey1', 'fileInfo'
 # 查询整表数据
@@ -35,7 +35,7 @@ scan 'hix_bro_recommend'
 # 扫描整个列簇
 scan 'FileTable', {COLUMN=>'fileInfo'}
 # 指定扫描其中的某个列
-scan 'hix_bro_recommend' ,{COLUMNS=>'dd:time'}
+scan 'hix_broadcast_recommend' ,{COLUMNS=>'dd:time'}
 scan 'FileTable', {COLUMNS=> 'fileInfo:name'}
 # 除了列（COLUMNS）修饰词外，HBase还支持Limit（限制查询结果行数），STARTROW（ROWKEY起始行。会先根据这个key定位到region，再向后扫描）、STOPROW(结束行)、TIMERANGE（限定时间戳范围）、VERSIONS（版本数）、和FILTER（按条件过滤行）等。比如我们从RowKey1这个rowkey开始，找下一个行的最新版本
 scan 'FileTable', { STARTROW => 'rowkey1', LIMIT=>1, VERSIONS=>1}
@@ -43,9 +43,15 @@ scan 'FileTable', { STARTROW => 'rowkey1', LIMIT=>1, VERSIONS=>1}
 scan 'FileTable', FILTER=>"ValueFilter(=,'name:file1.txt’)"
 # FILTER中支持多个过滤条件通过括号、AND和OR的条件组合
 scan 'FileTable', FILTER=>"ColumnPrefixFilter('typ') AND ValueFilter ValueFilter(=,'substring:10')"
+
+
 # 通过delete命令，我们可以删除某个字段，接下来的get就无结果
-delete 'FileTable','rowkey1','fileInfo:size'
-get 'FileTable','rowkey1','fileInfo:size'
+get 'hix_broadcast_recommend','100000_128207:17884'
+delete 'hix_broadcast_recommend','100000_128207:17884','dd:intimacy'
+delete 'hix_broadcast_recommend','100000_128207:17884','dd:sumIntimacy'
+put 'hix_broadcast_recommend', '100000_128207:17884','dd:sumIntimacy','110'
+
+
 # 删除整行的值
 deleteall 'FileTable','rowkey1'
 get 'FileTable',’rowkey1'
@@ -55,6 +61,6 @@ is_disabled 'FileTable'
 # 使用exists来检查表是否存在
 exists 'FileTable'
 # 删除表需要先将表disable
-disable 'FileTable'
-drop 'FileTable'
-drop 'hix_bro_recommend'
+disable 'hix_broadcast_recommend'
+drop 'hix_broadcast_recommend'
+drop 'hix_broadcast_recommend'

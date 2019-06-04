@@ -13,6 +13,7 @@ import java.sql.SQLException;
 /**
  * @author Yibo Zhang
  * @date 2019/06/03
+ * 从 mysql 读取数据时需要创建一个实体类存储数据
  */
 public class StuHbase implements WritableComparable<StuHbase>, DBWritable {
 
